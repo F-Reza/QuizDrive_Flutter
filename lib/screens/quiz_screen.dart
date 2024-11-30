@@ -19,45 +19,49 @@ class _QuizScreenState extends State<QuizScreen> {
   late Timer _timer;
   int _timeLeft = 1200; // Start with 20 minutes (1200 seconds)
   bool _isAnswered = false;
-  bool _isCorrect = false; // Track if the selected answer is correct
+  bool _isCorrect = false;
 
-  static int testCounter = 1; // Static counter to generate dynamic player names
+  static int testCounter = 1;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    category = ModalRoute.of(context)!.settings.arguments as Category; // Fetching category from the route
+    category = ModalRoute.of(context)!.settings.arguments as Category;
     _loadQuestions();
     _startTimer();
   }
 
   void _startTimer() {
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (mounted && _timeLeft > 0) {  // Check if widget is mounted before calling setState
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (mounted && _timeLeft > 0) {
         setState(() => _timeLeft--);
       } else if (mounted) {
         _timer.cancel();
-        _endQuiz(); // End quiz when timer runs out
+        _endQuiz();
       }
     });
   }
 
   Future<void> _loadQuestions() async {
     final db = await QuizDatabase.instance.database;
-    final result = await db.query('questions', where: 'category_id = ?', whereArgs: [category.id]);
+    final result = await db.rawQuery(
+        'SELECT * FROM questions WHERE category_id = ? ORDER BY RANDOM() LIMIT 20',
+        [category.id]
+    );
 
-    if (mounted) {  // Check if widget is mounted before calling setState
+    if (mounted) {
       setState(() {
         _questions = result.map((e) => Question.fromMap(e)).toList();
       });
     }
   }
 
+
   void _answerQuestion(int selectedOption) {
-    if (mounted) {  // Check if widget is mounted before calling setState
+    if (mounted) {
       setState(() {
-        _isAnswered = true; // Lock the question after answering
-        _isCorrect = _questions[_currentIndex].answer == selectedOption; // Check if answer is correct
+        _isAnswered = true;
+        _isCorrect = _questions[_currentIndex].answer == selectedOption;
         if (_isCorrect) {
           _score++;
         }
@@ -66,11 +70,11 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   void _nextQuestion() {
-    if (mounted && _currentIndex < _questions.length - 1) {  // Check if widget is mounted before calling setState
+    if (mounted && _currentIndex < _questions.length - 1) {
       setState(() {
         _currentIndex++;
-        _isAnswered = false; // Reset answered state for next question
-        _isCorrect = false;  // Reset correct answer state
+        _isAnswered = false;
+        _isCorrect = false;
       });
     } else {
       _endQuiz();
@@ -78,31 +82,25 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   void _endQuiz() async {
-    // Stop the timer
     _timer.cancel();
 
-    // Get the current time as an ISO 8601 formatted string
     String timestamp = DateTime.now().toIso8601String();
-
-    // Generate dynamic player name
     String playerName = 'TEST-${testCounter++}';
 
-    // Save the score to the database with the dynamic name
     final db = await QuizDatabase.instance.database;
     await db.insert('leaderboard', {
       'category_id': category.id,
-      'name': playerName, // Use dynamic player name
+      'name': playerName,
       'score': _score,
       'timestamp': timestamp,
     });
 
-    if (mounted) {  // Check if widget is mounted before calling setState
+    if (mounted) {
       setState(() {
         _timeLeft = 1200; // Reset to 20 minutes
       });
     }
 
-    // Disable back button during result screen
     Navigator.pushReplacementNamed(
       context,
       '/result',
@@ -125,11 +123,11 @@ class _QuizScreenState extends State<QuizScreen> {
           content: const Text('Are you sure you want to exit the quiz? Your progress will not be saved.'),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(false), // Cancel exit
+              onPressed: () => Navigator.of(context).pop(false),
               child: const Text('Cancel'),
             ),
             TextButton(
-              onPressed: () => Navigator.of(context).pop(true), // Confirm exit
+              onPressed: () => Navigator.of(context).pop(true),
               child: const Text('Exit'),
             ),
           ],
@@ -138,7 +136,6 @@ class _QuizScreenState extends State<QuizScreen> {
     ) ?? false;
 
     if (shouldExit) {
-      // If user confirms, end quiz and save score
       _endQuiz();
     }
 
@@ -147,8 +144,7 @@ class _QuizScreenState extends State<QuizScreen> {
 
   @override
   void dispose() {
-    // Clean up resources when the widget is disposed
-    _timer.cancel();  // Cancel the timer to avoid memory leaks
+    _timer.cancel();
     super.dispose();
   }
 
@@ -160,14 +156,17 @@ class _QuizScreenState extends State<QuizScreen> {
 
     final question = _questions[_currentIndex];
     return WillPopScope(
-      onWillPop: _onWillPop, // Intercept the back button
+      onWillPop: _onWillPop,
       child: Scaffold(
         appBar: AppBar(
+          foregroundColor: Colors.white,
+          backgroundColor: Colors.amber,
+          iconTheme: const IconThemeData(color: Colors.white),
           title: Text('${category.name} Quiz'),
           actions: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Center(child: Text('Time: ${_formatTime(_timeLeft)}')), // Display time in MM:SS format
+              child: Center(child: Text('Time: ${_formatTime(_timeLeft)}')),
             ),
           ],
         ),
@@ -196,7 +195,7 @@ class _QuizScreenState extends State<QuizScreen> {
                         ? WidgetStateProperty.all(Colors.red)
                         : WidgetStateProperty.all(Colors.grey)))
                         : WidgetStateProperty.all(Colors.blue),
-                  ), // Disable button if answered
+                  ),
                   child: Text(option),
                 );
               }),

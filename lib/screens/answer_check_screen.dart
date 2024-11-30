@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../models/models.dart';
 
 class AnswerCheckScreen extends StatelessWidget {
+  const AnswerCheckScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as Map;
@@ -9,40 +11,40 @@ class AnswerCheckScreen extends StatelessWidget {
     final int selectedAnswer = args['selectedAnswer'];
 
     return Scaffold(
-      appBar: AppBar(title: Text('Answer Check')),
+      appBar: AppBar(title: const Text('Answer Check')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Question:',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(question.question),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'Your Answer:',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(selectedAnswer == question.answer
                 ? 'Correct: ${_getOptionText(question, selectedAnswer)}'
                 : 'Incorrect: ${_getOptionText(question, selectedAnswer)}'),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'Correct Answer:',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(_getOptionText(question, question.answer)),
-            Spacer(),
+            const Spacer(),
             ElevatedButton(
               onPressed: () {
                 Navigator.pop(context, 'next');
               },
-              child: Text('Next Question'),
+              child: const Text('Next Question'),
             ),
           ],
         ),

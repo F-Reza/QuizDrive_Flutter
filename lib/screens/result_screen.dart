@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../db/database.dart';
 import '../models/models.dart';
+import 'leaderboard_screen.dart';
 
 class ResultScreen extends StatelessWidget {
   const ResultScreen({super.key});
@@ -13,7 +13,25 @@ class ResultScreen extends StatelessWidget {
     final int total = args['total'];
 
     return Scaffold(
-      appBar: AppBar(title: Text('Results for ${category.name}')),
+      appBar: AppBar(
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.amber,
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: Text('Results for ${category.name}'),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => LeaderBoardScreen(category: category),
+                ),
+              );
+            },
+            icon: const Icon(Icons.developer_board_outlined),
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Center(
@@ -21,12 +39,16 @@ class ResultScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Spacer(),
+              const Text('Congratulations!',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
               Text(
                 'You scored $score out of $total',
                 style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               //Spacer(),
-              const SizedBox(height: 20,),
+              const SizedBox(height: 0,),
+              Text('You have got $score Points'),
               const SizedBox(height: 20,),
               ElevatedButton(
                 onPressed: () async {

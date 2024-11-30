@@ -1153,11 +1153,6 @@ class QuizDatabase {
       ];
 
 
-
-
-
-
-
       for (var question in physics) {
         // Shuffle options
         final options = [question['option1'], question['option2'], question['option3'], question['option4']];
@@ -1414,7 +1409,6 @@ class QuizDatabase {
         question['answer'] = shuffledIndex;
         await db.insert('questions', question);
       }
-
 
       print("All Sample questions inserted successfully.");
     }

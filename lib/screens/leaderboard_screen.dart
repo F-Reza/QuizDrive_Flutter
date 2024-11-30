@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../db/database.dart';
-import '../models/models.dart'; // Make sure to import the correct model
+import '../models/models.dart';
 
 class LeaderBoardScreen extends StatefulWidget {
   final Category category;
@@ -17,11 +17,13 @@ class _LeaderBoardScreenState extends State<LeaderBoardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.amber,
+        iconTheme: const IconThemeData(color: Colors.white),
         title: Text('Leaderboard - ${widget.category.name}'),
         actions: [
           IconButton(
             onPressed: () {
-              // Trigger clear all data for this category
               _clearLeaderboardData(context);
             },
             icon: const Icon(Icons.cleaning_services),
@@ -41,7 +43,6 @@ class _LeaderBoardScreenState extends State<LeaderBoardScreen> {
 
           final leaderboard = snapshot.data!;
 
-          // Get the highest score entry (first item after sorting)
           final highestScoreEntry = leaderboard.isNotEmpty
               ? leaderboard.first
               : null;
@@ -49,7 +50,7 @@ class _LeaderBoardScreenState extends State<LeaderBoardScreen> {
           return ListView(
             children: [
               if (highestScoreEntry != null) _buildHighestScoreWidget(highestScoreEntry),
-              ...leaderboard.map((entry) => _buildLeaderboardCard(entry)).toList(),
+              ...leaderboard.map((entry) => _buildLeaderboardCard(entry)),
             ],
           );
         },
@@ -64,8 +65,8 @@ class _LeaderBoardScreenState extends State<LeaderBoardScreen> {
       color: Colors.green[100],
       child: ListTile(
         title: Text('Highest Score: ${entry.name}',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-        subtitle: Text('Score: ${entry.score}', style: TextStyle(fontSize: 18)),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+        subtitle: Text('Score: ${entry.score}', style: const TextStyle(fontSize: 18)),
         trailing: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisSize: MainAxisSize.min,
@@ -78,7 +79,6 @@ class _LeaderBoardScreenState extends State<LeaderBoardScreen> {
     );
   }
 
-  // Widget to build each leaderboard entry
   Widget _buildLeaderboardCard(LeaderboardEntry entry) {
     return Card(
       margin: const EdgeInsets.all(10),
@@ -113,12 +113,11 @@ class _LeaderBoardScreenState extends State<LeaderBoardScreen> {
       'leaderboard',
       where: 'category_id = ?',
       whereArgs: [widget.category.id],
-      orderBy: 'timestamp DESC, score DESC', // First by datetime, then by score
+      orderBy: 'timestamp DESC, score DESC',
     );
     return result.map((e) => LeaderboardEntry.fromMap(e)).toList();
   }
 
-  // Function to clear all leaderboard data for this category
   void _clearLeaderboardData(BuildContext context) async {
     // Show a confirmation dialog
     final shouldClear = await _showClearConfirmationDialog(context);
@@ -131,23 +130,18 @@ class _LeaderBoardScreenState extends State<LeaderBoardScreen> {
         whereArgs: [widget.category.id],
       );
 
-      // Show confirmation snack bar
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Leaderboard data cleared.')),
       );
 
-      // Trigger a UI update to refresh the leaderboard
       setState(() {});
     } else if (shouldClear == false) {
-      // User canceled the operation
-      // You can show a different snackbar or take another action if needed
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Operation canceled.')),
       );
     }
   }
 
-  // Show confirmation dialog to confirm data clearing
   Future<bool?> _showClearConfirmationDialog(BuildContext context) async {
     return showDialog<bool>(
       context: context,
@@ -157,11 +151,11 @@ class _LeaderBoardScreenState extends State<LeaderBoardScreen> {
           content: const Text('Are you sure you want to clear all leaderboard data for this category?'),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(false), // User canceled
+              onPressed: () => Navigator.of(context).pop(false),
               child: const Text('Cancel'),
             ),
             TextButton(
-              onPressed: () => Navigator.of(context).pop(true), // User confirmed
+              onPressed: () => Navigator.of(context).pop(true),
               child: const Text('Clear'),
             ),
           ],

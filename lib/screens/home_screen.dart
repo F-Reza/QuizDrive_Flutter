@@ -9,7 +9,15 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('QuizDrive'),
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.amber,
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: const Text('QuizDrive',
+          style: TextStyle(fontSize: 24,
+              fontWeight: FontWeight.w500,
+              fontStyle: FontStyle.italic,
+          ),
+        ),
         leading: const Icon(Icons.light_mode_sharp),
       ),
       body: FutureBuilder<List<Category>>(
@@ -29,17 +37,41 @@ class HomeScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               final category = categories[index];
               return Card(
+                color: Colors.amber.withOpacity(0.5),
+                elevation: 2,
                 margin: const EdgeInsets.all(10),
                 child: ListTile(
-                  title: Text(category.name),
+                  title: Text(category.name,
+                    style: const TextStyle(fontSize: 22),
+                  ),
                   onTap: () {
-                    // Navigate to quiz overview screen and pass selected category
                     Navigator.pushNamed(
                       context,
                       '/quiz-overview',
-                      arguments: category, // Pass category when navigating to quiz overview
+                      arguments: category,
                     );
                   },
+                  subtitle: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.access_time_outlined),
+                        Text(
+                          ' 15 Minutes',
+                          style: TextStyle(fontWeight: FontWeight.w300,color: Colors.white),
+                        ),
+                        SizedBox(width: 8,),
+                        Icon(Icons.quiz_outlined),
+                        Text(
+                          ' 20 Quizzes',
+                          style: TextStyle(fontWeight: FontWeight.w300,color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ),
+                  //leading: const Icon(Icons.light_mode_sharp,size: 40,),
+                  trailing: Image.asset('images/trophy.png',height: 45,),
                 ),
               );
             },
