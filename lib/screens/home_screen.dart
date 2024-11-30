@@ -3,19 +3,24 @@ import '../db/database.dart';
 import '../models/models.dart';
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Quiz Categories')),
+      appBar: AppBar(
+        title: const Text('QuizDrive'),
+        leading: const Icon(Icons.light_mode_sharp),
+      ),
       body: FutureBuilder<List<Category>>(
         future: _fetchCategories(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No categories available.'));
+            return const Center(child: Text('No categories available.'));
           }
 
           final categories = snapshot.data!;
@@ -24,14 +29,15 @@ class HomeScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               final category = categories[index];
               return Card(
-                margin: EdgeInsets.all(10),
+                margin: const EdgeInsets.all(10),
                 child: ListTile(
                   title: Text(category.name),
                   onTap: () {
+                    // Navigate to quiz overview screen and pass selected category
                     Navigator.pushNamed(
                       context,
                       '/quiz-overview',
-                      arguments: category,
+                      arguments: category, // Pass category when navigating to quiz overview
                     );
                   },
                 ),

@@ -8,7 +8,7 @@ class TimerProvider extends ChangeNotifier {
   int get timeLeft => _timeLeft;
 
   void startTimer() {
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_timeLeft > 0) {
         _timeLeft--;
         notifyListeners();

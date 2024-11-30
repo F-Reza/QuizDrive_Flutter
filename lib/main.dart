@@ -6,6 +6,8 @@ import 'package:quiz_drive/screens/quiz_overview_screen.dart';
 import 'package:quiz_drive/screens/quiz_screen.dart';
 import 'package:quiz_drive/screens/result_screen.dart';
 
+import 'models/models.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -24,7 +26,7 @@ class MyApp extends StatelessWidget {
         '/quiz': (context) => QuizScreen(),
         '/answer-check': (context) => AnswerCheckScreen(),
         '/result': (context) => ResultScreen(),
-        '/leaderboard': (context) => LeaderBoardScreen(),
+        '/leaderboard': (context) => LeaderBoardScreen(category: ModalRoute.of(context)!.settings.arguments as Category),
       },
     );
   }

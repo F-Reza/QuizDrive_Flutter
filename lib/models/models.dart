@@ -64,25 +64,31 @@ class LeaderboardEntry {
   final int categoryId;
   final String name;
   final int score;
+  final String timestamp;  // Add the timestamp field
 
   LeaderboardEntry({
     this.id,
     required this.categoryId,
     required this.name,
     required this.score,
+    required this.timestamp,  // Make sure to pass timestamp when creating the object
   });
 
+  // Factory constructor to create an object from a Map (database entry)
   factory LeaderboardEntry.fromMap(Map<String, dynamic> json) => LeaderboardEntry(
     id: json['id'] as int?,
     categoryId: json['category_id'] as int,
     name: json['name'] as String,
     score: json['score'] as int,
+    timestamp: json['timestamp'] as String,  // Retrieve timestamp from the database
   );
 
+  // Method to convert an object to a Map for database insertion
   Map<String, dynamic> toMap() => {
     'id': id,
     'category_id': categoryId,
     'name': name,
     'score': score,
+    'timestamp': timestamp,  // Include timestamp when inserting into the database
   };
 }
