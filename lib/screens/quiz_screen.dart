@@ -17,7 +17,7 @@ class _QuizScreenState extends State<QuizScreen> {
   int _currentIndex = 0;
   int _score = 0;
   late Timer _timer;
-  int _timeLeft = 1200; // Start with 20 minutes (1200 seconds)
+  int _timeLeft = 600; // Start with 20 minutes (1200 seconds)
   bool _isAnswered = false;
   bool _isCorrect = false;
 
@@ -97,7 +97,7 @@ class _QuizScreenState extends State<QuizScreen> {
 
     if (mounted) {
       setState(() {
-        _timeLeft = 1200; // Reset to 20 minutes
+        _timeLeft = 600; // Reset to 10 minutes
       });
     }
 
@@ -170,68 +170,90 @@ class _QuizScreenState extends State<QuizScreen> {
             ),
           ],
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text('Q: ${question.question}', style: const TextStyle(fontSize: 18)),
-              ...List.generate(4, (index) {
-                final option = [
-                  question.option1,
-                  question.option2,
-                  question.option3,
-                  question.option4
-                ][index];
-                return ElevatedButton(
-                  onPressed: _isAnswered
-                      ? null
-                      : () => _answerQuestion(index + 1),
-                  style: ButtonStyle(
-                    backgroundColor: _isAnswered
-                        ? (_isCorrect && index + 1 == question.answer
-                        ? WidgetStateProperty.all(Colors.green)
-                        : (index + 1 == question.answer
-                        ? WidgetStateProperty.all(Colors.red)
-                        : WidgetStateProperty.all(Colors.grey)))
-                        : WidgetStateProperty.all(Colors.blue),
-                  ),
-                  child: Text(option),
-                );
-              }),
-              const SizedBox(height: 20),
-              // Show progress box below the question
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                height: 50,
-                decoration: BoxDecoration(
-                  color: _isAnswered
-                      ? (_isCorrect ? Colors.green : Colors.red)
-                      : Colors.transparent,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Center(
-                  child: Text(
-                    _isAnswered
-                        ? (_isCorrect ? 'Correct!' : 'Incorrect!')
-                        : '',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
+        body: Stack(
+          children: [
+            Positioned.fill(
+              child: Image.asset('images/bg.gif',
+                fit: BoxFit.fitWidth,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 10,),
+                  Text('Q: ${question.question}', style: const TextStyle(fontSize: 18)),
+                  const SizedBox(height: 8,),
+                  ...List.generate(4, (index) {
+                    final option = [
+                      question.option1,
+                      question.option2,
+                      question.option3,
+                      question.option4
+                    ][index];
+                    return ElevatedButton(
+                      onPressed: _isAnswered
+                          ? null
+                          : () => _answerQuestion(index + 1),
+                      style: ButtonStyle(
+                        backgroundColor: _isAnswered
+                            ? (_isCorrect && index + 1 == question.answer
+                            ? WidgetStateProperty.all(Colors.green)
+                            : (index + 1 == question.answer
+                            ? WidgetStateProperty.all(Colors.orangeAccent)
+                            : WidgetStateProperty.all(Colors.grey)))
+                            : WidgetStateProperty.all(Colors.amber),
+                      ),
+                      child: Text(option,style: const TextStyle(color: Colors.white),),
+                    );
+                  }),
+                  const SizedBox(height: 10),
+                  // Show progress box below the question
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: _isAnswered
+                          ? (_isCorrect ? Colors.green : Colors.red)
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: Center(
+                      child: Text(
+                        _isAnswered
+                            ? (_isCorrect ? 'Correct!' : 'Incorrect!')
+                            : '',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 18,
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  _isAnswered? const SizedBox(height: 20) : const SizedBox(),
+                  SizedBox(
+                    width: 400,
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStateProperty.all<Color>(
+                          Colors.blue,
+                        ),
+                      ),
+                      onPressed: _isAnswered ? _nextQuestion : null,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Text(_currentIndex == _questions.length - 1
+                            ? 'Finish Quiz'
+                            : 'Next Question',style: const TextStyle(color: Colors.white,fontSize: 18),),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _isAnswered ? _nextQuestion : null,
-                child: Text(_currentIndex == _questions.length - 1
-                    ? 'Finish Quiz'
-                    : 'Next Question'),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

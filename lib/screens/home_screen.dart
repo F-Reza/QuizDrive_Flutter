@@ -58,7 +58,7 @@ class HomeScreen extends StatelessWidget {
                       children: [
                         Icon(Icons.access_time_outlined),
                         Text(
-                          ' 15 Minutes',
+                          ' 10 Minutes',
                           style: TextStyle(fontWeight: FontWeight.w300,color: Colors.white),
                         ),
                         SizedBox(width: 8,),
@@ -71,7 +71,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                   //leading: const Icon(Icons.light_mode_sharp,size: 40,),
-                  trailing: Image.asset('images/trophy.png',height: 45,),
+                  trailing: Image.asset('images/trophy1.png',height: 45,),
                 ),
               );
             },

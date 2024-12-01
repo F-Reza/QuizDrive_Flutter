@@ -38,15 +38,25 @@ class ResultScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Spacer(),
-              const Text('Congratulations!',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+
+              Stack(
+                children: [
+                  Image.asset('images/giphy.gif',width: MediaQuery.of(context).size.width,),
+                  const Positioned(
+                    left: 50,
+                    right: 50,
+                    top: 20,
+                      child: Text('Congratulations!',
+                        style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                      ),
+                  ),
+
+                ],
               ),
               Text(
                 'You scored $score out of $total',
                 style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              //Spacer(),
               const SizedBox(height: 0,),
               Text('You have got $score Points'),
               const SizedBox(height: 20,),

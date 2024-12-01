@@ -30,49 +30,68 @@ class QuizOverviewScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                'Ready to start the ${category.name} quiz?',
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset('images/bg-1.gif',
+              fit: BoxFit.cover,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Icon(Icons.access_time_outlined),
+                  const SizedBox(height: 14),
                   Text(
-                    ' 15 Minutes',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                    'Ready to start the ${category.name} quiz?',
+                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(width: 8,),
-                  Icon(Icons.quiz_outlined),
-                  Text(
-                    ' 20 Quizzes',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  const SizedBox(height: 8),
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.access_time_outlined),
+                      Text(
+                        ' 10 Minutes',
+                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(width: 8,),
+                      Icon(Icons.quiz_outlined),
+                      Text(
+                        ' 20 Quizzes',
+                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                      ),
+                    ],
                   ),
+                  const SizedBox(height: 16,),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all<Color>(
+                          Colors.amber,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.pushNamed(
+                        context,
+                        '/quiz',
+                        arguments: category, // Passing the category
+                      );
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text('Start Quiz',style: TextStyle(fontSize: 16,color: Colors.white),),
+                    ),
+                  ),
+                  const SizedBox(height: 30,),
+                  Image.asset('images/qtime.jpg',width: MediaQuery.of(context).size.width,),
+
                 ],
               ),
-              const SizedBox(height: 10,),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(
-                    context,
-                    '/quiz',
-                    arguments: category, // Passing the category
-                  );
-                },
-                child: const Text('Start Quiz'),
-              ),
-
-
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
